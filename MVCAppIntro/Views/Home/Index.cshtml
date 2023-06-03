@@ -1,0 +1,44 @@
+﻿@using MVCAppIntro.Models
+@model List<ProductModel>
+<!-- @@model declaration ile view gönderilen modele bağlanılır. -->
+@{
+  ViewData["Title"] = "Index";
+}
+
+@{
+  // @@{ c# kodu yazabilmemizi sağlayan bir alana açtık. }
+  // c# koduna geçiş
+  string isim = "Ali";
+  int sayi1 = 10;
+  int sayi2 = 15;
+}
+
+
+
+
+<h1>Index</h1>
+
+<!-- Değişkeni element içine yazdırırken @@degiskenismi syntax kullanırız -->
+<p>@isim</p>
+
+<p>Carpım : @(sayi1 * sayi2)</p>
+
+<!-- View gönderilen herşey Model olarak yakalanır. Framework ait kural. -->
+
+<div>
+
+
+  @foreach (var item in Model)
+  {
+    <div> ürün Adi : @item.İsim</div>
+    <div>ürün Fiyatı : @item.Fiyat</div>
+    <div>ürün Stoğu : @item.Stok</div>
+    <div>Kategorisi : @item.Kategori</div>
+    <br />
+  }
+ 
+</div>
+
+
+<p>Can 432ewq</p>
+

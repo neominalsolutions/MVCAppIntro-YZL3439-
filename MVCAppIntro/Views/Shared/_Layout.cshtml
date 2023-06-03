@@ -1,0 +1,32 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_Layout</title>
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Link verirken mvc de ControllerName/ActionName yöntemini kullandık-->
+  <nav class="navbar">
+    <a href="/Student/Index"> Öğrenci Tablosu</a>
+    <a href="/Teacher/Index">Öğretmen Tablosu </a>
+    <a class="btn btn-default" href="/Home/Index">Anasayfa</a>
+  </nav>
+
+
+
+  <main>
+    @RenderBody()
+    <!-- Render Body method ile sayfadan sayfaya değişecek olan yeri işaretliyoruz. -->
+  </main>
+
+  <footer>
+    Alt Bilgi
+  </footer>
+
+
+</body>
+</html>

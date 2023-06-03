@@ -1,0 +1,36 @@
+﻿
+@{
+  ViewData["Title"] = "Index";
+  //Layout = "~/Views/Shared/_Layout.cshtml";
+  // sayfanın layout yolunu göstermenin uzun yöntemi bunu yapmayız.
+}
+
+@using MVCAppIntro.Data
+@model List<Student>
+
+<table>
+  <thead>
+    <tr>
+      <th>
+        Ad
+      </th>
+      <th>
+        Soyad
+      </th>
+      <th>
+        Telefon
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var item in Model)
+    {
+      <tr>
+        <td>@item.Name</td>
+        <td>@item.SurName</td>
+        <td>@item.PhoneNumber</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
