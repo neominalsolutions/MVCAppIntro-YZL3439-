@@ -1,0 +1,32 @@
+﻿@{
+  ViewData["Title"] = "Delete";
+}
+
+@model Student
+
+<div class="container">
+  <div class="card mt-2">
+    <div class="card-header bg-primary text-white">
+      <h5>Kayıt Silme İşlemi</h5>
+    </div>
+
+    <div class="card-body">
+      @Model.Name @Model.SurName.ToUpper() kaydını silmek istediğinize emin misiniz ?
+    </div>
+
+    <div class="card-footer">
+      <form method="post" asp-controller="Student" asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+ @*       <input type="hidden" asp-for="Name" />
+        <input type="hidden" asp-for="SurName" />
+        <input type="hidden" asp-for="PhoneNumber" />*@
+        @*Son kullanıcının görmediği bir alandan veri gönderme işlemi *@
+        <button class="btn btn-success" type="submit">Onay</button>
+        @* Formunun gönderilmesi için button type submit yapmamız lazım yoksa formu mvc göndemriyor *@
+        <a asp-controller="Student" asp-action="Index" class="btn btn-primary" type="button">Vazgeç</a>
+      </form>
+    </div>
+  </div>
+
+</div>
+

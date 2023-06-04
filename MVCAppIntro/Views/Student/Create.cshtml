@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewData["Title"] = "Create";
+}
+
+@model Student
+
+@* Asp-for ile Formdaki alanları Student Model Propertylere bağlıyoruz. Bu işleme Model Binding denir. *@
+<form class="container" method="post" asp-controller="Student" asp-action="Create">
+  <div class="mb-3">
+    <label class="form-label">Ad</label>
+    <input asp-for="Name" type="text" class="form-control" >
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Soyad</label>
+    <input asp-for="SurName" type="text" class="form-control" >
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Telefon</label>
+    <input asp-for="PhoneNumber" type="text" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>
+

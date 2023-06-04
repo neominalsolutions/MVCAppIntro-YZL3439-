@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewData["Title"] = "Update";
+}
+
+@model Student
+
+<form class="container" method="post" asp-controller="Student" asp-action="Update">
+  <div class="mb-3">
+    <label class="form-label">Ad</label>
+    <input asp-for="Name" type="text" class="form-control">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Soyad</label>
+    <input asp-for="SurName" type="text" class="form-control">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Telefon</label>
+    <input asp-for="PhoneNumber" type="text" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Güncelle</button>
+</form>

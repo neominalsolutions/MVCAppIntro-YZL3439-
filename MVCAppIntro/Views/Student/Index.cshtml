@@ -5,20 +5,34 @@
   // sayfanın layout yolunu göstermenin uzun yöntemi bunu yapmayız.
 }
 
-@using MVCAppIntro.Data
-@model List<Student>
 
-<table>
+@model List<Student>
+<div class="container">
+
+  <div class="row justify-content-end">
+    <div class="col-2 mt-2 text-end">
+      <a asp-controller="Student" asp-action="Create" class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Yeni Kayıt
+      </a>
+    </div>
+   
+  </div>
+
+<table class="table table-bordered mt-3">
   <thead>
-    <tr>
-      <th>
+      <tr>
+        <th class="bg-black text-white">
         Ad
       </th>
-      <th>
+        <th class="bg-black text-white">
         Soyad
       </th>
-      <th>
+        <th class="bg-black text-white">
         Telefon
+      </th>
+        <th class="bg-black text-white">
+        İşlemler
       </th>
     </tr>
   </thead>
@@ -28,9 +42,15 @@
       <tr>
         <td>@item.Name</td>
         <td>@item.SurName</td>
-        <td>@item.PhoneNumber</td>
+          <td>@item.PhoneNumber</td> <!--Student/Delete/1 Student/Update/3-->
+        <td>
+          <a asp-controller="Student" asp-action="Update" asp-route-id="@item.Id" class="btn btn-secondary">Düzenle</a>
+          &nbsp;
+            <a asp-controller="Student" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Sil</a>
+        </td>
       </tr>
     }
   </tbody>
 </table>
 
+</div>
