@@ -1,0 +1,42 @@
+﻿@{
+  ViewData["Title"] = "AssingTeacherToCourse";
+}
+
+@model CourseTeacher
+
+
+<div class="container">
+  <form asp-controller="Course" asp-action="AssingTeacherToCourse" method="post">
+
+    <div class="mb-3">
+      <label for="browser">Kurs Seçimi Yapınız:</label>
+      <input class="form-control" list="browsers" asp-for="CourseName">
+      <span asp-validation-for="CourseName"></span>
+      <datalist id="browsers">
+
+        @foreach (var item in (List<Course>)ViewBag.Courses)
+        {
+          <option value="@item.Name" />
+        }
+
+      </datalist>
+    </div>
+
+    <div class="mb-3">
+      <label>Öğretmen</label>
+      <select class="form-control" asp-for="TeacherId">
+        <option value="" selected>Eğitmen seçiniz</option>
+        @foreach (var item in (List<Teacher>)ViewBag.Teachers)
+        {
+          <option value="@item.Id">@item.Name @item.SurName</option>
+        }
+      </select>
+      <span asp-validation-for="TeacherId"></span>
+    </div>
+
+    <input class="btn btn-success" type="submit" value="Kaydet" />
+  </form>
+</div>
+
+
+
