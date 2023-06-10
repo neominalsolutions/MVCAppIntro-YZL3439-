@@ -2,6 +2,8 @@
 
 namespace MVCAppIntro.Data
 {
+  // entity
+  // idsi olan veri tabanınında kaydı tutulan nesneler
   public class Course
   {
     public int Id { get; set; }
