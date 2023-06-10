@@ -9,8 +9,11 @@ namespace MVCAppIntro.Data
 
     //  Student sınıfının veri tabanı tarafında bir tablo olması için DbSet propertysi kullanıyoruz
     // Students ismi tabloya bağlanmak için kullanacağımız isim.
-    public DbSet<Student> Students { get; set; }
-    public DbSet<Teacher> Teachers { get; set; }
+    public DbSet<Student> Students { get; set; } // Öğrenciler
+    public DbSet<Teacher> Teachers { get; set; } // Öğremenler
+
+    public DbSet<Course> Courses { get; set; } // Kurslar
+
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
