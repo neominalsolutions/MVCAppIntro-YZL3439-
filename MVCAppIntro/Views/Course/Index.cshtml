@@ -15,8 +15,40 @@
 @model List<Course>
 <div class="container">
 
+
+
   <div class="row justify-content-end">
-    <div class="col-2 mt-2 text-end">
+    <div class="col-8 mt-2">
+      <!-- form üzerinden querystring ile arama yapmak için form method get kullandık. -->
+      <form method="get" asp-controller="Course" asp-action="Index">
+        <div class="input-group">
+          <input class="form-control" name="aranan" value="@ViewBag.Aranan" placeholder="arama yapınız" />
+          <div class="input-group-addon">
+            <button class="btn btn-default" type="submit"><i class="fas fa-search"></i></button>
+          </div>
+        </div>
+
+
+      </form>
+
+      <form  class="mt-2" method="get" asp-action="Index" asp-controller="Course">
+        <input type="hidden" name="aranan" value="@ViewBag.Aranan" />
+        <input type="hidden" name="sayfa" value="@ViewBag.Sayfa" />
+        <!-- bir önceki viewbag değerlerini sıralamada kaybetmemek için hidden input ile aranan ve sayfa viewbag değerlerini gönderdik. -->
+        <select class="form-select" name="fiyatSiralama" onchange="this.form.submit()">
+          <option selected value="">Fiyata göre sırala</option>
+          <option value="asc">Fiyata göre azaldan artana</option>
+          <option value="desc">Fiyata göre artandan azalana</option>
+        </select>
+
+       @* @Html.DropDownList("fiyatSiralama",new List<SelectListItem>{ new SelectListItem{ Text = "A-Z", Value = "Asc"}, new SelectListItem { Text = "Z-A", Value= "Desc"}},"Fiyata Göre Sırala",  new { onchange="this.form.submit();"})*@
+      </form>
+    </div>
+    <div class="col-4 mt-2 text-end">
+      <a asp-controller="Course" asp-action="Index" class="btn btn-primary">
+        <i class="fa fa-times"></i>
+        Temizle
+      </a>
       <a asp-controller="Course" asp-action="Create" class="btn btn-primary">
         <i class="fa fa-plus"></i>
         Yeni Kayıt
@@ -71,6 +103,25 @@
       }
   </tbody>
 </table>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item"><a class="page-link" asp-action="Index" asp-controller="Course" asp-route-sayfa="@ViewBag.OncekiSayfa" asp-route-aranan="@ViewBag.Aranan" asp-route-fiyatSiralama="@ViewBag.fiyatSiralama">Önceki</a></li>
+      @for (int i = 1; i <= ViewBag.SayfaSayisi; i++)
+      {
+        // anasayafayı farklı değerlere göre açmak istiyorsa queryString kullanırız.
+        // sayafaya parametre gönderme yöntemi
+        // Course/Index?sayfa=1&aranan=mvc&sira=a-z
+        // Course/Index?sayfa=1
+        // querystring url üzerinden veri filtereleme yöntemi.
+        <li class="page-item"><a class="page-link" asp-action="Index" asp-controller="Course" asp-route-sayfa="@i" asp-route-aranan="@ViewBag.Aranan" asp-route-fiyatSiralama="@ViewBag.fiyatSiralama">@i</a></li>
+      }
+      <li class="page-item"><a class="page-link" asp-action="Index" asp-controller="Course" asp-route-sayfa="@ViewBag.SonrakiSayfa" asp-route-aranan="@ViewBag.Aranan" asp-route-fiyatSiralama="@ViewBag.fiyatSiralama">Sonraki</a></li>
+  
+
+      
+    </ul>
+  </nav>
 
 </div>
 
