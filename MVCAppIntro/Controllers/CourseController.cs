@@ -54,6 +54,8 @@ namespace MVCAppIntro.Controllers
       ViewBag.OncekiSayfa = sayfa == 1 ? 1: sayfa - 1; // sayfa 1 ise zaten önceki sayfam olamaz.
       ViewBag.SonrakiSayfa = sayfa == sayfaSayisi ? sayfaSayisi : sayfa + 1; // son sayfadaysam zaten sayfa sondur, değilsem sonraki sayfa suanki sayfa + 1 olur.
       ViewBag.Aranan = aranan;
+
+      // Sıralama işleminde son sayfa ve fiyatSıralama seçimi elimizde kalsın diye ViewBag yaptık.
       ViewBag.Sayfa = sayfa;
       ViewBag.fiyatSiralama = fiyatSiralama;
 
