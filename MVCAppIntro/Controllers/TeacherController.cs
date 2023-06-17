@@ -10,7 +10,7 @@ namespace MVCAppIntro.Controllers
       var db = new TestDbContext();
       var tlist = db.Teachers.ToList();
 
-      return View();
+      return View(tlist);
     }
   }
 }

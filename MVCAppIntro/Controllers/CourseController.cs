@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MVCAppIntro.Data;
 using MVCAppIntro.Models;
 
@@ -8,7 +9,13 @@ namespace MVCAppIntro.Controllers
   {
     public IActionResult Index()
     {
-      return View();
+
+      var db = new TestDbContext(); // sınıfa bağlan.
+      // course çekilirken CourseTeacher bilgisinide çek yani joinle
+      // eğer CourseTeacherId null değilse kayıt gelir.
+      var clist = db.Courses.Include(x=> x.CourseTeacher).ToList(); // select Name,SurName from Students
+
+      return View(clist);
     }
 
 

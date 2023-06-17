@@ -1,0 +1,76 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+@{
+  ViewData["Title"] = "Index";
+  //Layout = "~/Views/Shared/_Layout.cshtml";
+  // sayfanın layout yolunu göstermenin uzun yöntemi bunu yapmayız.
+}
+
+
+@model List<Course>
+<div class="container">
+
+  <div class="row justify-content-end">
+    <div class="col-2 mt-2 text-end">
+      <a asp-controller="Course" asp-action="Create" class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Yeni Kayıt
+      </a>
+    </div>
+
+  </div>
+
+<table class="table table-bordered mt-3">
+  <thead>
+      <tr>
+        <th class="bg-black text-white">
+        Kurs İsmi
+      </th>
+        <th class="bg-black text-white">
+        Kurs İçeriği
+      </th>
+        <th class="bg-black text-white">
+        Kurs Eğitmen
+      </th>
+        <th class="bg-black text-white">
+        Fiyat
+      </th>
+        <th class="bg-black text-white">
+        Başlangıç / Bitiş
+      </th>
+        <th class="bg-black text-white">
+        İşlemler
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+      @foreach (var item in Model)
+      {
+        <tr>
+          <td>@item.Name</td>
+          <td>@item.Content</td>
+            <td>@item.CourseTeacher?.Name @item.CourseTeacher?.SurName</td> <!--Student/Delete/1 Student/Update/3-->
+          <td>@item.Price ₺</td>
+          <td>@item.StartDate.Value.ToShortDateString() / @item.EndDate.Value.ToShortDateString()</td>
+          <td>
+            <a class="btn btn-warning" asp-controller="Course" asp-action="AssingTeacherToCourse">Eğitmen Atama Yap</a>
+            <a class="btn btn-primary" asp-controller="Course" asp-action="Students">Kursiyerler</a>
+            <a asp-controller="Course" asp-action="Update" asp-route-id="@item.Id" class="btn btn-secondary">Düzenle</a>
+            &nbsp;
+            <a asp-controller="Course" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Sil</a>
+
+          
+          
+          </td>
+        </tr>
+      }
+  </tbody>
+</table>
+
+</div>
+
