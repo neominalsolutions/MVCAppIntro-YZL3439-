@@ -38,7 +38,8 @@ namespace MVCAppIntro.Data
     // validasyonlara girmesin diye ? koyalım
     public Teacher? CourseTeacher { get; set; } // Kursun Eğitmeni
 
-    public List<Student>? CourseStudents { get; set; } // Kursa katılan öğrenciler
+    // Include yapmadığımız için bu liste null geldi null referans hatasını engellemek için newledik. class altından liste varsa kullandığımız bir kontrol yöntemi
+    public List<Student>? CourseStudents { get; set; } = new List<Student>(); // Kursa katılan öğrenciler
 
 
   }

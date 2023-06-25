@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewData["Title"] = "AddStudent";
+}
+
+@model Course
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">@Model.Name</h5>
+    <p class="card-text"><b>Toplam Saat:</b> @Model.TotalHours saat</p>
+
+    <!--@@(1deger + 2deger)-->
+
+    <p><b>Eğitmeni:</b> @(Model?.CourseTeacher?.Name + " " + Model?.CourseTeacher?.SurName.ToUpper())</p>
+
+    <h5><b>Kursiyerler</b></h5>
+    <ul>
+      @foreach (var item in Model?.CourseStudents)
+      {
+        <li>@(item.Name + " " + item.SurName.ToUpper())</li>
+      }
+     
+    </ul>
+
+    <form method="post" asp-action="AddStudent" asp-controller="Course">
+      <input type="hidden" name="courseId" value="@Model.Id" />
+      <!--CourseId -->
+      <select name="studentIds" multiple>
+        @foreach (var item in (List<Student>)ViewBag.Students) // ViewBag.Students veritabanındaki tüm öğrenciler
+        {
+          // course öğrenci atanmış ise bir daha atanamasın diye disabled ettik.
+          @if(Model.CourseStudents.Any(x=> x.Id == item.Id)) // kursa atanmış öğrencilerin listesi içerisinde id öğrenciId eşit bir kayıt varsa bu arkadaş bir daha kursa eklenemez.
+          {
+            <option disabled value="@item.Id">@item.Name @item.SurName.ToUpper()</option>
+          }
+          else
+          {
+            // kursiyerler içerisinde bu arkadaş yoksa o zaman seçilebilir yaptık.
+            <option value="@item.Id">@item.Name @item.SurName.ToUpper()</option>
+          }
+
+
+        }
+      </select>
+      <br />
+      <!--studentIds select içinden gelir -->
+      <button class="btn btn-success" type="submit">Öğrencileri Ekle</button>
+
+    </form>
+  </div>
+</div>
+
+
+
+

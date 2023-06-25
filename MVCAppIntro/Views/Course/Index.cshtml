@@ -66,15 +66,20 @@
         <th class="bg-black text-white">
         Kurs İçeriği
       </th>
-        <th class="bg-black text-white">
-        Kurs Eğitmen
-      </th>
+       
         <th class="bg-black text-white">
         Fiyat
       </th>
+     
         <th class="bg-black text-white">
         Başlangıç / Bitiş
       </th>
+        <th class="bg-black text-white">
+          Kurs Eğitmen
+        </th>
+        <th class="bg-black text-white">
+          Kursiyerler
+        </th>
         <th class="bg-black text-white">
         İşlemler
       </th>
@@ -86,12 +91,14 @@
         <tr>
           <td>@item.Name</td>
           <td>@item.Content</td>
-            <td>@item.CourseTeacher?.Name @item.CourseTeacher?.SurName</td> <!--Student/Delete/1 Student/Update/3-->
+
           <td>@item.Price ₺</td>
           <td>@item.StartDate.Value.ToShortDateString() / @item.EndDate.Value.ToShortDateString()</td>
+          <td>@(item.CourseTeacher?.Name + " " + @item.CourseTeacher?.SurName)</td> <!--Student/Delete/1 Student/Update/3-->
+          <td>@string.Join(", ",item?.CourseStudents?.Select(a=> a.Name + " " + a.SurName).ToArray())</td> <!--Student/Delete/1 Student/Update/3-->
           <td>
             <a class="btn btn-warning" asp-controller="Course" asp-action="AssingTeacherToCourse">Eğitmen Atama Yap</a>
-            <a class="btn btn-primary" asp-controller="Course" asp-action="Students">Kursiyerler</a>
+            <a class="btn btn-primary" asp-controller="Course" asp-action="AddStudent" asp-route-courseId="@item.Id">Kursa Öğrenci Ekle</a>
             <a asp-controller="Course" asp-action="Update" asp-route-id="@item.Id" class="btn btn-secondary">Düzenle</a>
             &nbsp;
             <a asp-controller="Course" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Sil</a>

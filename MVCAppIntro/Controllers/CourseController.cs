@@ -15,7 +15,7 @@ namespace MVCAppIntro.Controllers
       // course çekilirken CourseTeacher bilgisinide çek yani joinle
       // eğer CourseTeacherId null değilse kayıt gelir.
       // sayfalama yapmadan önce sıralama yaparız.
-      var clist = db.Courses.Include(x => x.CourseTeacher)
+      var clist = db.Courses.Include(x => x.CourseTeacher).Include(x=> x.CourseStudents)
         .Where(x => x.StartDate.Value > DateTime.Now.Date) // henüz başlamış kursları getir.
         .Where(x => EF.Functions.Like(x.Name, "%" + aranan + "%"))
         .OrderBy(x => x.StartDate).ToList(); // başlangıç saatine göre sırala
@@ -134,6 +134,42 @@ namespace MVCAppIntro.Controllers
 
       return View();
     }
+
+
+    // course/addStudent?courseId=1
+    [HttpGet]
+    public IActionResult AddStudent(int courseId)
+    {
+      var db = new TestDbContext();
+      // Include varsa Find kullanamıyoruz. Onun yerine FirstOrDefault kullanıyoruz.
+      var course = db.Courses.Include(x=> x.CourseTeacher)
+        .Include(x=> x.CourseStudents).FirstOrDefault(x=> x.Id == courseId);
+
+      ViewBag.Students = db.Students.ToList(); // Öğrenciler Dropdown doldurmak için kullandık
+
+      return View(course);
+    }
+
+    [HttpPost]
+    public IActionResult AddStudent(int[] studentIds, int courseId)
+    {
+
+      var db = new TestDbContext();
+      var course = db.Courses.Find(courseId);
+
+      ViewBag.Students = db.Students.ToList();
+
+      var students = db.Students.Where(x => studentIds.Contains(x.Id)).ToList();
+      // select * from students where StudentId in (1,2,3)
+      //course.CourseStudents = new List<Student>();
+
+      course.CourseStudents.AddRange(students); // çoklu öğrenci atama kodu.
+      db.SaveChanges();
+
+
+      return RedirectToAction("Index","Course");
+    }
+
 
     // TeacherId
     // CourseId
