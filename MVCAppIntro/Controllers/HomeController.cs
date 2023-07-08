@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MVCAppIntro.Models;
 
 namespace MVCAppIntro.Controllers
 {
+  /*[Authorize(AuthenticationSchemes = "YZL3439")] */// Oturum açmadan aşağdaki hiç bir sayafaya giriş yapılamaz, sadece login olanlar girebilir. oturum açılmadığında dolayı login sayfasına yönlendirir. 
   public class HomeController : Controller
   {
+    // [Authorize]
     public IActionResult Index()
     {
 
