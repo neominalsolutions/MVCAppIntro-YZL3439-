@@ -92,7 +92,6 @@ namespace MVCAppIntro.Controllers
     {
       if(ModelState.IsValid)
       {
-        
         try
         {
           var user = new User();
