@@ -92,18 +92,27 @@ namespace MVCAppIntro.Controllers
     {
       if(ModelState.IsValid)
       {
-        var user = new User();
-        user.Email = model.Email;
-        user.UserName = model.UserName;
-        user.Password = model.Password;
+        
+        try
+        {
+          var user = new User();
+          user.Email = model.Email;
+          user.UserName = model.UserName;
+          user.Password = model.Password;
 
-        var db = new TestDbContext();
-        db.Users.Add(user);
-        db.SaveChanges();
+          var db = new TestDbContext();
+          db.Users.Add(user);
 
-        ViewBag.Message = "Kayıt başarılı sisteme giriş yapabilirsiniz";
-    
+          db.SaveChanges();
 
+          ViewBag.Message = "Kayıt başarılı sisteme giriş yapabilirsiniz";
+        }
+        catch (Exception )
+        {
+          ModelState.AddModelError("Email", "Aynı E-posta adresinden mevcut");
+          ModelState.AddModelError("UserName", "Aynı Username mevcut");
+
+        }
       }
 
       return View();

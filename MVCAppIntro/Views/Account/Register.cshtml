@@ -18,6 +18,13 @@
   }
 </style>
 
+<div id="msg" data-status="@(ViewBag.Message is not null ? "Completed":"NotCompleted" )">@(ViewBag.Message is not null ? "Giriş Ekranına yönlendiriliyorsunuz..." : "")</div>
+
+@if (ViewBag.Message is not null)
+{
+  <div class="alert alert-success">@ViewBag.Message</div>
+}
+
 <main class="form-signin">
   <form method="post" asp-controller="Account" asp-action="Register">
     <div class="form-floating">
@@ -51,5 +58,16 @@
     <p class="mt-5 mb-3 text-muted">© 2017–2021</p>
   </form>
 </main>
+<script>
 
-
+  var msg = document.getElementById("msg");
+  // HTTPGET DE NotCompleted
+  // HTTPPOST da veri tabanına kayıt geçildiyse Completed 
+  if (msg.getAttribute("data-status") == "Completed") {
+    // 3 sn sonra kodu yönlendir.
+    setTimeout(() =>
+    {
+      window.location.href = "/Account/Login";
+    }, 3000);
+  }
+</script>

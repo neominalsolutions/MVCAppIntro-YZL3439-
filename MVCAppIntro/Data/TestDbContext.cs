@@ -22,8 +22,8 @@ namespace MVCAppIntro.Data
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       // Yöntem FLUENT API
-      modelBuilder.Entity<User>().HasIndex(x => x.UserName); // unique olsun
-      modelBuilder.Entity<User>().HasIndex(x => x.Email); // email unque olsun
+      modelBuilder.Entity<User>().HasIndex(x => x.UserName).IsUnique(); // unique olsun
+      modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique(); // email unque olsun
       modelBuilder.Entity<User>().Property(x => x.UserName).HasMaxLength(12); // En fazla 12 karakter olabilir. 
       modelBuilder.Entity<User>().HasKey(x => x.Id); // PK alanı belirttik.
       // db de tablo ismini değiştiridik.

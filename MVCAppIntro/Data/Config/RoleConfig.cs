@@ -8,7 +8,7 @@ namespace MVCAppIntro.Data.Config
     public void Configure(EntityTypeBuilder<Role> builder)
     {
       builder.HasKey(x => x.Id);
-      builder.HasIndex(x => x.Name);
+      builder.HasIndex(x => x.Name).IsUnique();
     }
   }
 }
