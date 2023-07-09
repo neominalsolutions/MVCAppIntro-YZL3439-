@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCAppIntro.Data;
 using MVCAppIntro.Models;
@@ -66,6 +67,7 @@ namespace MVCAppIntro.Controllers
 
 
     [HttpGet]
+    [Authorize(Roles = "Manager")] // course create sadece manager görebilir.
     public IActionResult Create()
     {
       return View();
@@ -73,6 +75,7 @@ namespace MVCAppIntro.Controllers
 
 
     [HttpPost]
+    [Authorize(Roles = "Manager")]
     public IActionResult Create(Course course)
     {
       // kodun veri tabanına gitmeden önce kontrolden geçmesine olayına validasyon diyoruz.

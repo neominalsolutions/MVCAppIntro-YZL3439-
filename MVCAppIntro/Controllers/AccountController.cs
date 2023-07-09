@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MVCAppIntro.Data;
 using MVCAppIntro.Models;
 using System.Security.Claims;
 
@@ -17,19 +19,26 @@ namespace MVCAppIntro.Controllers
     [HttpPost]
     public IActionResult Login(LoginModel model)
     {
-      if(model.UserName == "ali" && model.Password == "12345678")
+      var db = new TestDbContext();
+      // user rollerinin joinle sonra bu user rolleri ile birlikte dbden bul
+      var user = db.Users.Include(c=> c.Roles).FirstOrDefault(x => x.UserName == model.UserName && x.Password == model.Password);
+
+      if(user is not null)
       {
         List<Claim> claims = new List<Claim>(); // login olurken sistemde cookiede saklanacak kullanıcı değerlerini listeye atıcağımız liste
 
-        var claim1 = new Claim(ClaimTypes.Name, model.UserName);
-        var claim2 = new Claim(ClaimTypes.Email, "test@test.com");
-        var claim3 = new Claim(ClaimTypes.Role, "Admin");
-        var claim4 = new Claim(ClaimTypes.Role, "Manager");
-
+        var claim1 = new Claim(ClaimTypes.Name, user.UserName);
+        var claim2 = new Claim(ClaimTypes.Email, user.Email);
+        
         claims.Add(claim1);
         claims.Add(claim2);
-        claims.Add(claim3);
-        claims.Add(claim4);
+
+        foreach (var role in user.Roles)
+        {
+          var claim3 = new Claim(ClaimTypes.Role, role.Name);
+          claims.Add(claim3);
+        }
+        
 
         var identity = new ClaimsIdentity(claims, "YZL3439"); // login olucak kişi için yukarıdaki özelliklerde bir kimlik oluşturduk
 
@@ -62,13 +71,43 @@ namespace MVCAppIntro.Controllers
     }
 
 
-    [Authorize(AuthenticationSchemes = "YZL3439")] // not oturum açmış bir hesap sadece bu methodu çağırabilir. o yüzden authorize attribute koyduk
+    [Authorize] // not oturum açmış bir hesap sadece bu methodu çağırabilir. o yüzden authorize attribute koyduk
     [HttpGet]
     public IActionResult LogOut()
     {
       HttpContext.SignOutAsync("YZL3439"); // Authentication Scheme Ödemli, yazmayı unutmayalım.
 
       return RedirectToAction("Index", "Home"); // logout olunca beni anasayfaya yönlendir.
+    }
+
+
+    [HttpGet]
+    public IActionResult Register()
+    {
+      return View();
+    }
+
+    [HttpPost]
+    public IActionResult Register(RegisterModel model)
+    {
+      if(ModelState.IsValid)
+      {
+        var user = new User();
+        user.Email = model.Email;
+        user.UserName = model.UserName;
+        user.Password = model.Password;
+
+        var db = new TestDbContext();
+        db.Users.Add(user);
+        db.SaveChanges();
+
+        ViewBag.Message = "Kayıt başarılı sisteme giriş yapabilirsiniz";
+    
+
+      }
+
+      return View();
+
     }
 
   }

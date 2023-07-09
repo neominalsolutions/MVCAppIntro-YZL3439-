@@ -1,6 +1,7 @@
 ﻿
 
 using Microsoft.EntityFrameworkCore;
+using MVCAppIntro.Data.Config;
 
 namespace MVCAppIntro.Data
 {
@@ -13,8 +14,32 @@ namespace MVCAppIntro.Data
     public DbSet<Teacher> Teachers { get; set; } // Öğremenler
 
     public DbSet<Course> Courses { get; set; } // Kurslar
+    public DbSet<User> Users { get; set; }
+    public DbSet<Role> Roles { get; set; }
 
 
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      // Yöntem FLUENT API
+      modelBuilder.Entity<User>().HasIndex(x => x.UserName); // unique olsun
+      modelBuilder.Entity<User>().HasIndex(x => x.Email); // email unque olsun
+      modelBuilder.Entity<User>().Property(x => x.UserName).HasMaxLength(12); // En fazla 12 karakter olabilir. 
+      modelBuilder.Entity<User>().HasKey(x => x.Id); // PK alanı belirttik.
+      // db de tablo ismini değiştiridik.
+      //modelBuilder.Entity<User>().ToTable("Kullanıcılar");
+      // sütün ismini db de değiştiridik.
+      //modelBuilder.Entity<User>().Property(x => x.UserName).HasColumnName("KullanıcıAdı");
+
+      // Kodu burada yazmak yerine klasörden getirme yöntemide var. Büyük projelerde burasının okunması zorlaştığı için bu durumda buradaki kodlara class'lara geçiririz.
+
+      // config dosyasından oku.
+      modelBuilder.ApplyConfiguration(new RoleConfig());
+
+
+
+      base.OnModelCreating(modelBuilder);
+    }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

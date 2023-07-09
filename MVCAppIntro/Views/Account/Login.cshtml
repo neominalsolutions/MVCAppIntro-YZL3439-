@@ -28,11 +28,17 @@
       <span asp-validation-for="Password"></span>
     </div>
 
+  
     <div class="checkbox mb-3">
       <label>
         <input type="checkbox" asp-for="RememberMe" > Beni Hatırla
       </label>
     </div>
+
+    <div class="form-floating text-end">
+      <a asp-controller="Account" asp-action="Register">Kayıt Ol</a>
+    </div>
+    <br />
     <button class="w-100 btn btn-lg btn-primary" type="submit">Oturum Aç</button>
     <p class="mt-5 mb-3 text-muted">© 2017–2021</p>
   </form>

@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Register</h1>
+
+
+@model RegisterModel
+
+
+<style>
+  .form-signin {
+      width: 100%;
+      max-width: 330px;
+      padding: 15px;
+      margin: auto;
+  }
+</style>
+
+<main class="form-signin">
+  <form method="post" asp-controller="Account" asp-action="Register">
+    <div class="form-floating">
+      <input type="text" asp-for="UserName" class="form-control" id="floatingInput" placeholder="kullanıcı adı giriniz">
+      <label for="floatingInput">Kullanıcı Adı</label>
+      <span asp-validation-for="UserName"></span>
+    </div>
+
+     <div class="form-floating">
+      <input type="email" asp-for="Email" class="form-control" id="floatingInput" placeholder="kullanıcı adı giriniz">
+      <label for="floatingInput">Kullanıcı E-Posta</label>
+      <span class="text-danger" asp-validation-for="Email"></span>
+    </div>
+
+    <div class="form-floating">
+      <input type="password" asp-for="Password" class="form-control" id="floatingPassword" placeholder="parolayı giriniz">
+      <label for="floatingPassword">Parola</label>
+      <span asp-validation-for="Password"></span>
+    </div>
+
+
+    <div class="form-floating">
+      <input type="password" asp-for="PasswordAgain" class="form-control" id="floatingPassword" placeholder="parolayı giriniz">
+      <label for="floatingPassword">Parola Tekrar</label>
+      <span asp-validation-for="PasswordAgain"></span>
+    </div>
+
+
+   
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Kayıt Ol</button>
+    <p class="mt-5 mb-3 text-muted">© 2017–2021</p>
+  </form>
+</main>
+
+

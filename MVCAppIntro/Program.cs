@@ -11,6 +11,7 @@ builder.Services.AddAuthentication("YZL3439")
   option.LoginPath = "/Account/Login"; // uygulama login sayfasýndan sürecine devam etsin
 });
 
+
 // Razor Pages Proje Template
 // MVC Web Application Proje Template
 // API Web Servis geliþtireme Proje Template
