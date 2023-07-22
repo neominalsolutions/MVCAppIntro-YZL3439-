@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using BCrypt.Net;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,54 +20,79 @@ namespace MVCAppIntro.Controllers
     [HttpPost]
     public IActionResult Login(LoginModel model)
     {
-      var db = new TestDbContext();
-      // user rollerinin joinle sonra bu user rolleri ile birlikte dbden bul
-      var user = db.Users.Include(c=> c.Roles).FirstOrDefault(x => x.UserName == model.UserName && x.Password == model.Password);
 
-      if(user is not null)
+      if (ModelState.IsValid)
       {
-        List<Claim> claims = new List<Claim>(); // login olurken sistemde cookiede saklanacak kullanıcı değerlerini listeye atıcağımız liste
 
-        var claim1 = new Claim(ClaimTypes.Name, user.UserName);
-        var claim2 = new Claim(ClaimTypes.Email, user.Email);
-        
-        claims.Add(claim1);
-        claims.Add(claim2);
+        var db = new TestDbContext();
+        // user rollerinin joinle sonra bu user rolleri ile birlikte dbden bul
+        var user = db.Users.Include(c => c.Roles).FirstOrDefault(x => x.UserName == model.UserName);
 
-        foreach (var role in user.Roles)
+
+        if (user is not null)
         {
-          var claim3 = new Claim(ClaimTypes.Role, role.Name);
-          claims.Add(claim3);
+          var hashPass = BCrypt.Net.BCrypt.HashPassword(model.Password, user.PasswordSalt);
+          // elimizde parolayı hashleyip db deki user için hashlenmiş hali ile kıyaslıyoruz.
+          // eğer kıyaslama sonucunda eşitlik varsa kullanıcı sisteme girebiliyor.
+
+
+          if (user.PasswordHash == hashPass)
+          {
+
+            List<Claim> claims = new List<Claim>(); // login olurken sistemde cookiede saklanacak kullanıcı değerlerini listeye atıcağımız liste
+
+            var claim1 = new Claim(ClaimTypes.Name, user.UserName);
+            var claim2 = new Claim(ClaimTypes.Email, user.Email);
+
+            claims.Add(claim1);
+            claims.Add(claim2);
+
+            foreach (var role in user.Roles)
+            {
+              var claim3 = new Claim(ClaimTypes.Role, role.Name);
+              claims.Add(claim3);
+            }
+
+
+            var identity = new ClaimsIdentity(claims, "YZL3439"); // login olucak kişi için yukarıdaki özelliklerde bir kimlik oluşturduk
+
+            var claimPrinciple = new ClaimsPrincipal(identity); // bu kimlik bilgilerini sisteme oturum açacak olan sınıfa atamasını yaptık
+
+            //var claimsPrinciples = new ClaimsPrincipal(new ClaimsIdentity(claims));
+
+            var authProps = new AuthenticationProperties(); // yani kimlik doğrulamada oluşacak olan cookie kalıcı olup olmayacağı gibi bilgileri burada bu sınıf üzerinden belirleriz.
+            authProps.IsPersistent = model.RememberMe; // cokie kalıcı olsun. session bazlı olmasın demek.
+
+            //authProps.AllowRefresh = true;
+
+            // remember me seçilmez ise session değeri 20 dk olarak ayarlanır. 20 dakika sonra oturum düşer.
+
+            if (model.RememberMe)
+            {
+              authProps.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30); // Eğer kullanıcı beni hatılayı seçtiyse 1 aylık cookie seçmediyse 1 gün içerisinde oturum düşsün.
+            }
+
+            HttpContext.SignInAsync(claimPrinciple, authProps); // Sistemde Cookie oluşturmamızı sağlayacak kod
+
+            return RedirectToAction("Index", "Home");
+
+          }
+          else
+          {
+            ModelState.AddModelError("Password", "Parola doğru değil");
+            return View();
+          }
+
         }
-        
-
-        var identity = new ClaimsIdentity(claims, "YZL3439"); // login olucak kişi için yukarıdaki özelliklerde bir kimlik oluşturduk
-
-        var claimPrinciple = new ClaimsPrincipal(identity); // bu kimlik bilgilerini sisteme oturum açacak olan sınıfa atamasını yaptık
-
-        //var claimsPrinciples = new ClaimsPrincipal(new ClaimsIdentity(claims));
-
-        var authProps = new AuthenticationProperties(); // yani kimlik doğrulamada oluşacak olan cookie kalıcı olup olmayacağı gibi bilgileri burada bu sınıf üzerinden belirleriz.
-        authProps.IsPersistent = model.RememberMe; // cokie kalıcı olsun. session bazlı olmasın demek.
-
-        //authProps.AllowRefresh = true;
-       
-        // remember me seçilmez ise session değeri 20 dk olarak ayarlanır. 20 dakika sonra oturum düşer.
-
-        if(model.RememberMe)
+        else
         {
-          authProps.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30); // Eğer kullanıcı beni hatılayı seçtiyse 1 aylık cookie seçmediyse 1 gün içerisinde oturum düşsün.
+          return View();
         }
-
-        HttpContext.SignInAsync(claimPrinciple,authProps); // Sistemde Cookie oluşturmamızı sağlayacak kod
-
-        return RedirectToAction("Index", "Home");
 
       }
-      else
-      {
-        return View();
-      }
+
+
+      return View();
 
     }
 
@@ -90,14 +116,20 @@ namespace MVCAppIntro.Controllers
     [HttpPost]
     public IActionResult Register(RegisterModel model)
     {
-      if(ModelState.IsValid)
+      if (ModelState.IsValid)
       {
         try
         {
           var user = new User();
           user.Email = model.Email;
           user.UserName = model.UserName;
-          user.Password = model.Password;
+          // 512 bitten oluşan bir hash parolası oluştur.
+          //user.PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(model.Password, HashType.SHA512);
+          string salt = BCrypt.Net.BCrypt.GenerateSalt(); // salt değerini kendin oluştur.
+          string passHash = BCrypt.Net.BCrypt.HashPassword(model.Password, salt: salt);
+          user.PasswordHash = passHash;
+          user.PasswordSalt = salt;
+          //string normal = BCrypt.Net.BCrypt.HashPassword(model.Password);
 
           var db = new TestDbContext();
           db.Users.Add(user);
@@ -106,7 +138,7 @@ namespace MVCAppIntro.Controllers
 
           ViewBag.Message = "Kayıt başarılı sisteme giriş yapabilirsiniz";
         }
-        catch (Exception )
+        catch (Exception)
         {
           ModelState.AddModelError("Email", "Aynı E-posta adresinden mevcut");
           ModelState.AddModelError("UserName", "Aynı Username mevcut");
